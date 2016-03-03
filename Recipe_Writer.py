@@ -14,7 +14,7 @@ Recipe_Writers write Recipe (defined in Recipe.py) objects into .rec files
 import Recipe
 
 #MAC OSX path to iCook file library
-OSX_PATH = "~/Library/Application\ Support/iCook"
+OSX_PATH = "~/Library/Application Support/iCook"
 
 class Recipe_Writer:
 	def __init__(self):

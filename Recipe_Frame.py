@@ -4,14 +4,14 @@ Recipe_Frame.py
 Author: Conor Tracey
 
 Created: 		2/10/2016
-Latest Update: 	2/10/2016
+Latest Update: 	2/29/2016
 
 A module defining the Recipe_Frame object. Recipe_Frames are a child class of the tkinter
 Frame class. It is merely a graphical representation of a Recipe object for use in
 a tkinter GUI
 '''
 
-#built-in library imports
+#Standard library imports
 import tkinter as tk
 
 #local imports
@@ -26,8 +26,8 @@ class Recipe_Frame(tk.Frame):
 
 		self.recipe = recipe
 
-		self.name_label = tk.Label(self, text = ("NAME: " + recipe.name))
-		self.type_label = tk.Label(self, text = ("TYPE: " + recipe.type))
+		self.name_label = tk.Label(self, text = (recipe.name))
+		self.type_label = tk.Label(self, text = (recipe.type))
 
 		ingr_text = 'INGREDIENTS:\n'
 		for ingr in recipe.ingredients:
@@ -46,6 +46,6 @@ class Recipe_Frame(tk.Frame):
 		self.ingredients_label.grid_configure(row=2, column=0)
 		self.instruction_label.grid_configure(row=3, column=0)
 
-		return
+		return None
 
 
