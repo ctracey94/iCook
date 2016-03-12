@@ -4,7 +4,7 @@ Recipe_Reader.py
 Author: Conor Tracey
 
 Created: 		1/22/2016
-Latest Update: 	2/25/2016
+Latest Update: 	3/11/2016
 
 A module defining the Recipe_Reader object for use in the iCook application.
 Recipe_Readers read .rec filetypes and translate them into Recipe objects
@@ -44,7 +44,7 @@ class Recipe_Reader:
 
 		#check for eof in case something went wrong with the file
 		if num_ingr == '':
-			print("\nERROR: Recipe_Reader reached end of file prematurely, possible file corruption")
+			print("Recipe_Reader: EOF reached")
 			return recipe
 
 		num_ingr = int(num_ingr)

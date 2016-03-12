@@ -15,7 +15,7 @@ in place, and nothing else so far.
 import os, stat
 
 # Local Imports
-import Recipe, Recipe_Reader
+import Recipe, Recipe_Reader, Recipe_Writer
 
 # MAC OSX path to iCook file library
 OSX_PATH = os.path.expanduser("~/Library/Application Support/iCook/")
@@ -24,8 +24,10 @@ OSX_PATH = os.path.expanduser("~/Library/Application Support/iCook/")
 class App_Initializer:
 
 	def __init__(self):
-		types = []
+		self.types = []
+		self.recipes = {}
 		return None
+
 
 	def make_file_sys(self):
 		'''
@@ -53,6 +55,9 @@ class App_Initializer:
 		#make a file for recipes
 		recipe_file = open(OSX_PATH + "recipes", "w+")
 
+		#make recipe_writer
+		rec_writer = Recipe_Writer.Recipe_Writer()
+
 		###### LOAD DEFAULT RECIPES ######
 
 		banana_cream_pie = Recipe.Recipe(name = "Banana Cream Pie", type = "Dessert")
@@ -74,7 +79,7 @@ class App_Initializer:
 								 "over filling. Pour remaining custard over bananas. Spread with",\
 								 "whipped cream. Refrigerate 6 hours or overnight. Yield: 8 servings"]
 
-		baked_potatoes = Recipe.Recipe(name = "Baked Potatoes", type = "Sides")
+		baked_potatoes = Recipe.Recipe(name = "Baked Potatoes", type = "Side")
 		baked_potatoes.ingredients = ["4 russet potatoes (about 1/2 lb), scrubbed", \
 									 "olive oil", "sea salt", "freshly ground pepper", "unsalted butter"]
 
@@ -96,27 +101,94 @@ class App_Initializer:
 									  ken, several pieces at a time, for 5-6 minutes on each side or until golden brown and juices run \
 									  clear. Drain on paper towels."]
 
+		#write default recipes to recipe file
+		rec_writer.write_one(banana_cream_pie, recipe_file)
+		rec_writer.write_one(baked_potatoes, recipe_file)
+		rec_writer.write_one(fried_chicken, recipe_file)
 
+		recipe_file.close()
 
 		return None
 
 
-	def check_file_sys(self):
+	def load(self):
+		'''
+		(None) -> None
+
+		loads recipes and types from the main directory (sorted by type) into a
+		dictionary which is stored as a class variable
+		'''
+
+		type_file = open(OSX_PATH + "types", "r")
+
+		for line in type_file:
+			self.types.append(line.strip('\n'))
+
+		type_file.close()
+
+		# initialize dictionary for recipes
+		self.recipes = {}
+		for type in self.types:
+			self.recipes[type] = []
+
+		rec_reader = Recipe_Reader.Recipe_Reader()
+		recipe_file = open(OSX_PATH + "recipes", "r")
+
+		cont = True
+		while cont:
+			new_rec = rec_reader.read_one(recipe_file)
+
+			#check for eof or failure to enter recipe type
+			if (new_rec.name == '') or (new_rec.type == ''):
+				break
+
+			#try to put recipe in recipes dict, if the type doesn't exist
+			#throw the recipe out, and continue reading
+			try:
+				self.recipes[new_rec.type].append(new_rec)
+
+			except KeyError:
+				print("error: failed to load recipe", '"' + new_rec.name + '"')
+				pass
+
+		recipe_file.close()
+
+		return None
+
+
+	def boot(self):
+		'''
+		(None) -> None
+
+		a method of booting the application. Checks file system and then loads
+		recipes into memory
+		'''
 
 		#check if main directory exists, otherwise make it
 		if not os.path.isdir(OSX_PATH):
 			self.make_file_sys()
 
-		#TODO - finish writing method...
+		self.load()
+
+		return None
 
 
-	def load_recipes(self):
-		'''
-		(None) -> Dictionary
 
-		loads recipes from the main directory (sorted by type) into a dictionary which is
-		returned
-		'''
 
-		# initialize
-		recipes = {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
